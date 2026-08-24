@@ -751,22 +751,4 @@ Test-NetConnection login.microsoftonline.com -Port 443
 Test-NetConnection graph.microsoft.com -Port 443
 ```
 
----
 
-## 📜 License
-
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
-
----
-
-## 👤 Author
-
-**Mohammad Abdulkader Omar**  
-Website: https://momar.tech  
-LinkedIn: https://www.linkedin.com/in/mabdulkadr/  
-
----
-
-## ⚠ Disclaimer
-
-These scripts are provided as-is. Test them in a staging environment before applying them to production. The author is not responsible for any unintended outcomes resulting from their use.
