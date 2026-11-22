@@ -44,9 +44,9 @@
 # Module-scoped default credentials — Override via parameters or $env variables
 # ==============================================================================
 # Example values (replace with your own)
-$script:DefaultTenantId       = '00000000-0000-0000-0000-000000000000'   # Your tenant ID
-$script:DefaultClientId       = '00000000-0000-0000-0000-000000000000'   # Your app ID
-$script:DefaultClientSecret   = 'REMOVED'   # Your secret (use $env:GRAPH_CLIENT_SECRET in production)
+$script:DefaultTenantId       = '00000000-0000-0000-0000-000000000000'   # Fake placeholder - replace with your tenant ID
+$script:DefaultClientId       = $null   # Set via -ClientId or $env:GRAPH_CLIENT_ID
+$script:DefaultClientSecret   = $null   # Set via -ClientSecret or $env:GRAPH_CLIENT_SECRET
 
 # Module state
 $script:Connected = $false

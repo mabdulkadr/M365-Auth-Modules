@@ -1,4 +1,4 @@
-Requires -Version 5.1
+#Requires -Version 5.1
 
 <#
 .SYNOPSIS
@@ -52,9 +52,9 @@ Requires -Version 5.1
 # Module-scoped default credentials — Override via parameters or $env variables
 # ==============================================================================
 # Example values (replace with your own)
-$script:DefaultTenantId     = '00000000-0000-0000-0000-000000000000'   # Your tenant ID
-$script:DefaultClientId     = '00000000-0000-0000-0000-000000000000'   # Your app ID
-$script:DefaultClientSecret = 'REMOVED'   # Your secret (use $env:TEAMS_CLIENT_SECRET in production)
+$script:DefaultTenantId     = '00000000-0000-0000-0000-000000000000'   # Fake placeholder - replace with your tenant ID
+$script:DefaultClientId     = $null   # Set via -ClientId or $env:TEAMS_CLIENT_ID
+$script:DefaultClientSecret = $null   # Set via -ClientSecret or $env:TEAMS_CLIENT_SECRET
 
 $script:GraphBaseUri = 'https://graph.microsoft.com/v1.0'
 

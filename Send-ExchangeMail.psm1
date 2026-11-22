@@ -51,9 +51,9 @@
 # Module-scoped default credentials — Override via parameters or $env variables
 # ==============================================================================
 # Example values (replace with your own)
-$script:DefaultTenantId       = '00000000-0000-0000-0000-000000000000'   # Your Azure AD tenant ID
-$script:DefaultClientId       = '00000000-0000-0000-0000-000000000000'   # Your Azure AD application (client) ID
-$script:DefaultClientSecret   = 'REMOVED'   # Your secret (use $env:EXCHANGE_CLIENT_SECRET in production)
+$script:DefaultTenantId       = '00000000-0000-0000-0000-000000000000'   # Fake placeholder - replace with your Azure AD tenant ID
+$script:DefaultClientId       = $null   # Set via -ClientId or $env:EXCHANGE_CLIENT_ID
+$script:DefaultClientSecret   = $null   # Set via -ClientSecret or $env:EXCHANGE_CLIENT_SECRET
 
 # ==============================================================================
 # Acquire OAuth 2.0 access token via client credentials flow

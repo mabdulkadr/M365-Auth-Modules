@@ -44,7 +44,7 @@ $script:AuthMode = $null
 # Module-scoped defaults — Override via parameters or $env variables
 # ==============================================================================
 # Example values (replace with your own)
-$script:DefaultTenantId             = '00000000-0000-0000-0000-000000000000'   # Your Azure AD tenant ID
+$script:DefaultTenantId             = '00000000-0000-0000-0000-000000000000'   # Fake placeholder - replace with your Azure AD tenant ID
 $script:DefaultAppId                = '00000000-0000-0000-0000-000000000000'   # Your Azure AD application (client) ID
 $script:DefaultCertificateThumbprint = 'F4E5D6C7-B8A9-0123-4567-89ABCDEF0123'  # Your certificate thumbprint (use $env:EXO_CERT_THUMBPRINT in production)
 $script:DefaultOrganization         = 'your-domain.com'                       # Your organization domain
