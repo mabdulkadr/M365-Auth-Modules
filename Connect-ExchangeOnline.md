@@ -1,6 +1,6 @@
 # 📦 Connect-ExchangeOnline Module (Connect-ExchangeOnline.psm1)
 
-> Part of **[M365 Auth Modules](../README.md)** — centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
+> Part of **[M365 Auth Modules](../README.md)**: centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
 
 ![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-blue.svg)
 ![EXO](https://img.shields.io/badge/Exchange-Online-0078D4.svg)
@@ -11,11 +11,11 @@
 
 ## 📖 Overview
 
-**Connect-ExchangeOnline.psm1** connects to **Exchange Online (EXO)** and the **Security & Compliance Center (IPPS)** using the `ExchangeOnlineManagement` module. **Certificate-based app-only authentication** is recommended for automation; interactive user login is provided for development/testing.
+Connect-ExchangeOnline.psm1 connects to Exchange Online and the Security & Compliance Center through the `ExchangeOnlineManagement` module. Automation should use certificate-based app-only sign-in. An interactive login is available for development and testing.
 
-- **Auth flow:** X.509 Certificate (app-only) or interactive user login
-- **API endpoint:** `outlook.office365.com` (EXO), `ps.compliance.protection.outlook.com` (IPPS)
-- **Best for:** Quarantine management, message trace, retention policies, scheduled compliance tasks
+- Sign-in uses an X.509 certificate or an interactive user login
+- Endpoints are `outlook.office365.com` for Exchange Online and `ps.compliance.protection.outlook.com` for IPPS
+- Common uses include quarantine management, message trace, retention policies, and scheduled compliance work
 
 > 📖 For App Registration setup see [`SETUP.md`](SETUP.md) section **3️⃣ Connect-ExchangeOnline App Registration**.
 
@@ -24,17 +24,17 @@
 ## ✨ Core Features
 
 ### 🔹 Connect-EXOSession
-- **Certificate-based app-only** via `ExchangeOnlineManagement\Connect-ExchangeOnline -CertificateThumbprint`
-- **Interactive user** login via `ExchangeOnlineManagement\Connect-ExchangeOnline` (no params)
-- Connects to **EXO + IPPS** by default; `-SkipIPPS` to skip IPPS
-- TLS 1.2 forced on every connect
-- Banner suppressed by default; `-ShowBanner` reveals it
-- Maps `AADSTS700016` / `AADSTS7000215` / `Access is denied` / certificate errors to friendly messages
+- Uses certificate app-only auth through `ExchangeOnlineManagement\Connect-ExchangeOnline -CertificateThumbprint`
+- Supports interactive sign-in with the same cmdlet and no parameters
+- Connects to Exchange Online and IPPS by default. `-SkipIPPS` skips the compliance endpoint
+- Forces TLS 1.2 on every connection
+- Hides the connection banner unless `-ShowBanner` is passed
+- Rewrites AADSTS codes, access-denied messages, and certificate errors as readable text
 
 ### 🔹 Disconnect-EXOSession
-- Disconnects from both EXO and IPPS in one call
-- `-SkipIPPS` to disconnect from EXO only
-- `-Confirm:$false` so it can run unattended in Task Scheduler
+- Closes both sessions in one call
+- `-SkipIPPS` closes only the Exchange Online session
+- Uses `-Confirm:$false` so it can run unattended from Task Scheduler
 
 ### 🔹 Cert-Thumbprint Resolution
 1. `-CertificateThumbprint` parameter
@@ -152,10 +152,10 @@ Disconnect-EXOSession
 ## 📊 Operational Safeguards
 
 - ✅ TLS 1.2 forced via `[Net.ServicePointManager]::SecurityProtocol`
-- 🔒 Cert auth never sends secrets over the wire — only RSA-signed JWTs
-- 🛟 AADSTS error code mapping — `AADSTS700016` / `7000215` / `certificate not found` → readable errors
-- 🔄 `-Confirm:$false` on disconnect — safe in unattended scripts
-- 🛡 `ShowBanner` defaults to `$false` — quieter scheduled-task runs
+- 🔒 Cert auth sends only RSA-signed JWTs, never secrets over the wire
+- 🛟 AADSTS error codes map `AADSTS700016` / `7000215` / `certificate not found` to readable errors
+- 🔄 `-Confirm:$false` on disconnect keeps unattended scripts safe
+- 🛡 `ShowBanner` defaults to `$false` for quieter scheduled-task runs
 - 🆘 Module auto-installs `ExchangeOnlineManagement` from PSGallery
 
 ---
@@ -177,13 +177,13 @@ Disconnect-EXOSession
 
 ## 🛡 Design Principles
 
-- **Certificate auth preferred** — no client secrets to leak; ideal for scheduled tasks
-- **TLS 1.2 enforced** — always, even on older runtimes
-- **Friendly AADSTS mapping** — AAD error codes translated to plain English
-- **IPPS-by-default** — most compliance scripts need both; `-SkipIPPS` to opt out
-- **No silent failures** — `$true` / `$false` return; `Write-Error` on every failure path
-- **Auto-dependency** — `ExchangeOnlineManagement` installed on first connect
-- **Banner-quiet** — banner suppressed by default to keep Task Scheduler logs clean
+- Certificate auth is preferred because it leaves no client secrets to leak and suits scheduled tasks
+- TLS 1.2 is enforced, even on older runtimes
+- AAD error codes are translated to plain English
+- IPPS connects by default because most compliance scripts need both; use `-SkipIPPS` to opt out
+- Every failure path returns `$true` / `$false` and writes a `Write-Error`
+- `ExchangeOnlineManagement` is installed on first connect
+- The banner is suppressed by default to keep Task Scheduler logs clean
 
 ---
 

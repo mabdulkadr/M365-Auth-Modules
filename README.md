@@ -6,17 +6,14 @@
 
 Centralized OAuth 2.0 and certificate-based auth for Intune, Exchange Online, Teams, SharePoint, and Microsoft Graph — no credentials embedded in scripts, ever.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![PowerShell](https://img.shields.io/badge/powershell-5.1%2B-blue.svg)
-![Platform](https://img.shields.io/badge/Windows-10%2F11-blue.svg)
-![Graph](https://img.shields.io/badge/API-Microsoft%20Graph-0078D6.svg)
-![EXO](https://img.shields.io/badge/Exchange-Online-0078D4.svg)
-![Intune](https://img.shields.io/badge/Intune-Microsoft%20Graph-0078D6.svg)
-![Teams](https://img.shields.io/badge/Teams-Microsoft%20Graph-6264A7.svg)
-![SharePoint](https://img.shields.io/badge/SharePoint-Microsoft%20Graph-038387.svg)
-![Version](https://img.shields.io/badge/version-1.1-green.svg)
+[![Mode](https://img.shields.io/badge/Mode-CLI-334155?style=for-the-badge)](#-usage)
+[![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-5391FE?style=for-the-badge&logo=powershell&logoColor=white)](https://learn.microsoft.com/en-us/powershell/)
+[![Platform](https://img.shields.io/badge/Platform-Windows%2010%2F11-0F172A?style=for-the-badge)](#%EF%B8%8F-requirements)
+[![Graph](https://img.shields.io/badge/API-Microsoft%20Graph-0078D6?style=for-the-badge)](#-overview)
+[![License](https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge)](#-license)
+[![Version](https://img.shields.io/badge/Version-1.1-334155?style=for-the-badge)](#-overview)
 
-[Overview](#-overview) • [Modules](#-core-features) • [Usage](#-usage) • [Permissions](#-permissions) • [Troubleshooting](#-troubleshooting)
+[Overview](#-overview) • [Modules](#-core-features) • [Usage](#-usage) • [Permissions](#-permissions) • [Troubleshooting](#-troubleshooting) • [License](#-license)
 
 </div>
 
@@ -24,9 +21,9 @@ Centralized OAuth 2.0 and certificate-based auth for Intune, Exchange Online, Te
 
 # 📖 Overview
 
-**M365 Auth Modules** is a collection of six self-contained PowerShell modules for **Microsoft 365 authentication and Azure AD automation**. Each module wraps one service with a clean `Connect-*` / `Disconnect-*` lifecycle — so your scripts never embed credentials or auth logic again.
+**M365 Auth Modules** is a collection of six self-contained PowerShell modules for **Microsoft 365 authentication and Azure AD automation**. Each module wraps one service with a clean `Connect-*` / `Disconnect-*` lifecycle, so your scripts never embed credentials or auth logic again.
 
-> 🔐 **Modern auth only.** Every module uses OAuth 2.0 or certificate-based authentication — no Basic Auth, no SMTP, no legacy protocols. Microsoft is deprecating SMTP AUTH Basic Authentication (disabled by default Dec 2026, final removal H2 2027); this project is future-proof from day one.
+> 🔐 **Modern auth only.** Every module uses OAuth 2.0 or certificate-based authentication. There is no Basic Auth, SMTP, or legacy protocol. Microsoft is deprecating SMTP AUTH Basic Authentication (disabled by default Dec 2026, final removal H2 2027); this project avoids that deprecation.
 
 | Method | Modules | Protocol |
 |--------|---------|----------|
@@ -51,45 +48,25 @@ Each module is self-contained: code, documentation, and examples live together i
 
 ---
 
-# 📂 Project Structure
-
-```text
-M365-Auth-Modules/
-│
-├── README.md                       # This file
-├── SETUP.md                        # Azure AD App Registration guide (per module)
-├── CHANGELOG.md                    # Version history
-├── LICENSE                         # MIT
-│
-├── Connect-Intune.psm1 / .md       # Intune/Graph connection + device operations
-├── Send-ExchangeMail.psm1 / .md    # HTML email via Microsoft Graph (no SMTP)
-├── Connect-ExchangeOnline.psm1 / .md  # EXO + Security & Compliance (IPPS)
-├── Connect-Teams.psm1 / .md        # Teams, channels, members
-├── Connect-SharePoint.psm1 / .md   # Sites, lists, files
-└── Connect-MgGraph.psm1 / .md      # Users, groups, devices
-```
-
----
-
 # ✨ Core Features
 
 ### 🔹 Connect-Intune (`Connect-Intune.psm1`)
 
-Authenticate to Microsoft Graph with Intune-specific permission scopes — app-only or interactive.
+Authenticate to Microsoft Graph with Intune-specific permission scopes, app-only or interactive.
 
-* `Connect-Intune` / `Disconnect-Intune` — OAuth 2.0 client credentials or interactive delegated login; auto-installs `Microsoft.Graph.Authentication`; friendly AADSTS error mapping (`700016` / `7000215` in plain English)
-* `Get-IntuneDevices` — managed devices with auto-pagination via `@odata.nextLink` and server-side OData `-Filter`
-* `Send-IntuneDeviceSync` — sends the `syncDevice` command to a device by GUID
-* `Get-IntunePolicy` — filters device configuration policies by name substring
+* `Connect-Intune` / `Disconnect-Intune`: OAuth 2.0 client credentials or interactive delegated login; auto-installs `Microsoft.Graph.Authentication`; friendly AADSTS error mapping (`700016` / `7000215` in plain English)
+* `Get-IntuneDevices`: managed devices with auto-pagination via `@odata.nextLink` and server-side OData `-Filter`
+* `Send-IntuneDeviceSync`: sends the `syncDevice` command to a device by GUID
+* `Get-IntunePolicy`: filters device configuration policies by name substring
 
 > 📖 Docs: [`Connect-Intune.md`](Connect-Intune.md) · ⚙ Setup: [`SETUP.md` §1](SETUP.md#1️⃣-connect-intune-app-registration)
 
 ### 🔹 Send-ExchangeMail (`Send-ExchangeMail.psm1`)
 
-Send HTML email through Microsoft Graph — **no SMTP, no Basic Auth**.
+Send HTML email through Microsoft Graph without SMTP or Basic Auth.
 
 * HTML body, CC/BCC arrays, file attachments as `fileAttachment`
-* BSTR-safe SecureString handling — `ZeroFreeBSTR` in `finally`
+* BSTR-safe SecureString handling with `ZeroFreeBSTR` in `finally`
 * Multi-source secret resolution: `-ClientSecret` → `$env:EXCHANGE_CLIENT_SECRET` → module default
 * `-SaveToSentItems` switch for audit-trail compliance
 
@@ -110,19 +87,19 @@ Connect to **Exchange Online** and the **Security & Compliance Center (IPPS)** w
 
 Manage **Microsoft Teams** via Microsoft Graph.
 
-* `Connect-Teams` / `Disconnect-Teams` — client credentials or interactive auth; auto-installs `Microsoft.Graph.Teams`; token caching with `finally`-block leak protection
-* `Get-TeamsAll` / `Get-TeamsChannel` / `Get-TeamsMember` — auto-pagination with `-All`, members with role info
-* `New-TeamsChannel` — standard / private / shared channels, with `ShouldProcess` (`-WhatIf`) support
+* `Connect-Teams` / `Disconnect-Teams`: client credentials or interactive auth; auto-installs `Microsoft.Graph.Teams`; token caching with `finally`-block leak protection
+* `Get-TeamsAll` / `Get-TeamsChannel` / `Get-TeamsMember`: auto-pagination with `-All`, members with role info
+* `New-TeamsChannel`: standard / private / shared channels, with `ShouldProcess` (`-WhatIf`) support
 
 > 📖 Docs: [`Connect-Teams.md`](Connect-Teams.md) · ⚙ Setup: [`SETUP.md` §4](SETUP.md#4️⃣-connect-teams-app-registration)
 
 ### 🔹 Connect-SharePoint (`Connect-SharePoint.psm1`)
 
-Manage **SharePoint Online** — sites, lists, and files at scale.
+Manage **SharePoint Online** sites, lists, and files at scale.
 
 * Auto-installs `Microsoft.Graph.Sites` + `Microsoft.Graph.Files`; optional `-SiteUrl` pre-resolves the site on connect
-* `Get-SharePointSite` / `Get-SharePointList` / `Add-SharePointListItem` — OData `$filter`, `-All` pagination, `ShouldProcess` on writes, OData-injection prevention
-* `Get-SharePointFile` / `Upload-SharePointFile` — streaming download; upload with `conflictBehavior = rename` (configurable)
+* `Get-SharePointSite` / `Get-SharePointList` / `Add-SharePointListItem`: OData `$filter`, `-All` pagination, `ShouldProcess` on writes, OData-injection prevention
+* `Get-SharePointFile` / `Upload-SharePointFile`: streaming download; upload with `conflictBehavior = rename` (configurable)
 
 > 📖 Docs: [`Connect-SharePoint.md`](Connect-SharePoint.md) · ⚙ Setup: [`SETUP.md` §5](SETUP.md#5️⃣-connect-sharepoint-app-registration)
 
@@ -131,10 +108,30 @@ Manage **SharePoint Online** — sites, lists, and files at scale.
 General-purpose **Microsoft Graph** connection for directory-wide operations.
 
 * Auto-installs `Microsoft.Graph.Authentication`, `Users`, `Groups`, `Identity.DirectoryManagement`
-* `Get-MgGraphUser` / `Get-MgGraphGroup` / `Get-MgGraphDevice` — OData `-Filter` for server-side queries, `-All` pagination, `-WithMembers` for per-group member enumeration, customizable `-Property` arrays
+* `Get-MgGraphUser` / `Get-MgGraphGroup` / `Get-MgGraphDevice`: OData `-Filter` for server-side queries, `-All` pagination, `-WithMembers` for per-group member enumeration, customizable `-Property` arrays
 * BSTR-safe SecureString handling throughout
 
 > 📖 Docs: [`Connect-MgGraph.md`](Connect-MgGraph.md) · ⚙ Setup: [`SETUP.md` §6](SETUP.md#6️⃣-connect-mggraph-app-registration)
+
+---
+
+# 📂 Project Structure
+
+```text
+M365-Auth-Modules/
+│
+├── README.md                       # This file
+├── SETUP.md                        # Azure AD App Registration guide (per module)
+├── CHANGELOG.md                    # Version history
+├── LICENSE                         # MIT
+│
+├── Connect-Intune.psm1 / .md       # Intune/Graph connection + device operations
+├── Send-ExchangeMail.psm1 / .md    # HTML email via Microsoft Graph (no SMTP)
+├── Connect-ExchangeOnline.psm1 / .md  # EXO + Security & Compliance (IPPS)
+├── Connect-Teams.psm1 / .md        # Teams, channels, members
+├── Connect-SharePoint.psm1 / .md   # Sites, lists, files
+└── Connect-MgGraph.psm1 / .md      # Users, groups, devices
+```
 
 ---
 
@@ -389,16 +386,16 @@ Disconnect-Intune
 
 # 🛡 Operational Notes
 
-* **No secrets in code** — placeholders only in examples; use `$env:XXX_CLIENT_SECRET` or a secrets manager in production
-* **Least privilege** — each module requests only the scopes it actually calls
-* **Token lifecycle** — tokens re-acquired on every connection; SecureStrings zeroed via `ZeroFreeBSTR` in `finally` blocks
-* **Auto-dependency** — missing PSGallery modules install automatically on first connect
-* **Pagination handled** — every `Get-*` function follows `@odata.nextLink` automatically
-* **TLS enforced** — TLS 1.2 forced for all Exchange Online connections
-* **Safe writes** — `ShouldProcess` on all create/update functions (`-WhatIf` supported); OData injection prevented
-* **Descriptive errors** — AADSTS codes mapped to plain English
-* **Modular by design** — one service per module; centralize auth, reuse everywhere
-* **Future-proof** — OAuth 2.0 + certificates only; ready for the SMTP Basic Auth retirement
+* Examples use placeholders only; use `$env:XXX_CLIENT_SECRET` or a secrets manager in production
+* Each module requests only the scopes it actually calls
+* Tokens are re-acquired on every connection; SecureStrings are zeroed with `ZeroFreeBSTR` in `finally` blocks
+* Missing PSGallery modules install automatically on first connect
+* Every `Get-*` function follows `@odata.nextLink` automatically
+* TLS 1.2 is forced for all Exchange Online connections
+* All create/update functions support `ShouldProcess` and `-WhatIf`, and OData injection is prevented
+* AADSTS codes are mapped to plain English
+* One service per module keeps auth centralized and reusable
+* Only OAuth 2.0 and certificates are used, so the SMTP Basic Auth retirement does not affect these modules
 
 ---
 
@@ -415,7 +412,7 @@ Full history: [CHANGELOG.md](CHANGELOG.md)
 
 ## 👤 Author
 
-**Mohammad Abdulkader Omar**  
+**Mohammad Abdelkader Omar**  
 GitHub: [@mabdulkadr](https://github.com/mabdulkadr)  
 Website: [momar.tech](https://momar.tech)  
 

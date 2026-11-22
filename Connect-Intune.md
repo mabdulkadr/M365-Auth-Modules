@@ -1,6 +1,6 @@
 # 📦 Connect-Intune Module (Connect-Intune.psm1)
 
-> Part of **[M365 Auth Modules](../README.md)** — centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
+> Part of **[M365 Auth Modules](../README.md)**: centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
 
 ![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-blue.svg)
 ![Graph](https://img.shields.io/badge/API-Microsoft%20Graph-0078D6.svg)
@@ -11,11 +11,11 @@
 
 ## 📖 Overview
 
-**Connect-Intune.psm1** connects to **Microsoft Intune** via Microsoft Graph API with Intune-specific permission scopes. Supports both **app-only** (client credentials) and **delegated** (browser OAuth) authentication. Provides helpers for **device enumeration**, **sync commands**, and **policy retrieval**.
+Connect-Intune.psm1 connects to Microsoft Intune through the Graph API using Intune-specific scopes. It supports app-only sign-in with client credentials and delegated sign-in through a browser. The module includes helpers for listing devices, sending sync commands, and reading policies.
 
-- **Auth flow:** OAuth 2.0 client credentials (app-only) or interactive user login
-- **API endpoint:** `https://graph.microsoft.com/Beta/`
-- **Best for:** Intune device audits, sync automation, policy reports
+- Sign-in uses OAuth 2.0 client credentials or an interactive user login
+- Calls go to `https://graph.microsoft.com/Beta/`
+- It is useful for device audits, sync automation, and policy reports
 
 > 📖 For App Registration setup see [`SETUP.md`](SETUP.md) section **1️⃣ Connect-Intune App Registration**.
 
@@ -24,25 +24,25 @@
 ## ✨ Core Features
 
 ### 🔹 Connect-Intune / Disconnect-Intune
-- OAuth 2.0 client credentials flow (app-only) or interactive delegated
-- Auto-installs `Microsoft.Graph.Authentication`
-- Auto-detects Graph SDK v2 vs v1; switches profile to Beta for v1
-- Maps `AADSTS700016` / `AADSTS7000215` / `Access is denied` to friendly errors
+- Signs in with app-only client credentials or an interactive login
+- Installs `Microsoft.Graph.Authentication` if it is missing
+- Detects Graph SDK v2 or v1 and switches to the Beta profile for v1
+- Turns `AADSTS700016`, `AADSTS7000215`, and "Access is denied" into readable errors
 
 ### 🔹 Get-IntuneDevices
-- Lists all managed devices via `/Beta/deviceManagement/managedDevices`
-- Auto-pagination via `@odata.nextLink`
-- Optional `-Filter` (e.g., `deviceName eq 'PC-001'`)
-- Optional `-Top` to cap result size
+- Lists managed devices from `/Beta/deviceManagement/managedDevices`
+- Follows `@odata.nextLink` to fetch every page
+- Accepts an OData `-Filter`, for example `deviceName eq 'PC-001'`
+- `-Top` caps how many devices are returned per page
 
 ### 🔹 Send-IntuneDeviceSync
-- POSTs `syncDevice` action to a specific device by ID
-- Returns `$true` on success, descriptive error on failure
+- Posts the `syncDevice` action to one device ID
+- Returns `$true` when it works and a descriptive error when it fails
 
 ### 🔹 Get-IntunePolicy
-- Lists all device configuration policies
-- Optional `-Name` substring filter applied client-side
-- Auto-paginated across all policy pages
+- Lists device configuration policies
+- Filters on `-Name` as a substring on the client
+- Pages through all policy results
 
 ---
 
@@ -157,13 +157,13 @@ Disconnect-Intune
 
 ## 📊 Operational Safeguards
 
-- ✅ BSTR-safe SecureString handling — `ZeroFreeBSTR` in `finally` blocks
+- ✅ BSTR-safe SecureString handling with `ZeroFreeBSTR` in `finally` blocks
 - 🔒 `script:Connected` state-checked before every Graph call
-- 🛟 Auto-pagination via `@odata.nextLink` — never silently drops results
+- 🛟 Auto-pagination via `@odata.nextLink` avoids silently dropping results
 - 🔄 Token re-acquired on each `Connect-Intune` call (no stale tokens)
 - 📝 `-Verbose` flag on all functions for debug output
 - 🆘 Module auto-installs `Microsoft.Graph.Authentication` from PSGallery
-- 🛡 Friendly AADSTS mapping — `AADSTS700016` / `7000215` / `Access denied` translated
+- 🛡 Friendly AADSTS mapping translates `AADSTS700016` / `7000215` / `Access denied`
 
 ---
 
@@ -185,14 +185,14 @@ Disconnect-Intune
 
 ## 🛡 Design Principles
 
-- **No secrets in code** — example placeholder values shown; use `$env:INTUNE_CLIENT_SECRET` in production
-- **Pagination handled** — `@odata.nextLink` consumed automatically
-- **Auto-dependency** — required Graph modules installed on first import
-- **State-checked** — `script:Connected` guard prevents calls before connection
-- **BSTR-safe** — SecureString conversion uses `ZeroFreeBSTR` in `finally`
-- **Friendly errors** — AADSTS codes translated to plain English
-- **Beta endpoint** — uses `/Beta/deviceManagement/managedDevices` for richer data
-- **Profile-aware** — auto-detects v2 vs v1 SDK and selects correct profile
+- Example placeholder values are shown; there are no secrets in code, so use `$env:INTUNE_CLIENT_SECRET` in production
+- `@odata.nextLink` is consumed automatically
+- Required Graph modules are installed on first import
+- The `script:Connected` guard prevents calls before connection
+- SecureString conversion uses `ZeroFreeBSTR` in `finally`
+- AADSTS codes are translated to plain English
+- Uses `/Beta/deviceManagement/managedDevices` for richer data
+- Detects v2 vs v1 SDK and selects the correct profile
 
 ---
 

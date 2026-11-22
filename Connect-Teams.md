@@ -1,6 +1,6 @@
 # 📦 Connect-Teams Module (Connect-Teams.psm1)
 
-> Part of **[M365 Auth Modules](../README.md)** — centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
+> Part of **[M365 Auth Modules](../README.md)**: centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
 
 ![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-blue.svg)
 ![Graph](https://img.shields.io/badge/API-Microsoft%20Graph-0078D6.svg)
@@ -14,9 +14,9 @@
 
 **Connect-Teams.psm1** is a Microsoft Teams management module via Microsoft Graph API. It authenticates with Teams-specific permission scopes and provides helpers for **listing teams**, **channels**, **members**, and **creating new channels** (standard, private, shared).
 
-- **Auth flow:** OAuth 2.0 client credentials (app-only) or delegated (browser OAuth)
-- **API endpoint:** `https://graph.microsoft.com/v1.0/`
-- **Best for:** Teams inventory, channel provisioning, member reporting
+- Auth flow: OAuth 2.0 client credentials (app-only) or delegated (browser OAuth)
+- API endpoint: `https://graph.microsoft.com/v1.0/`
+- Best for: Teams inventory, channel provisioning, member reporting
 
 > 📖 For App Registration setup see [`SETUP.md`](SETUP.md) section **4️⃣ Connect-Teams App Registration**.
 
@@ -43,7 +43,7 @@
 ### 🔹 New-TeamsChannel
 - Creates a channel with name + optional description
 - `-MembershipType` accepts `standard`, `private`, `shared` (default `standard`)
-- `ShouldProcess` enabled — supports `-WhatIf` for safe dry-runs
+- `ShouldProcess` enabled, with `-WhatIf` for safe dry-runs
 
 ### 🔹 Generic Graph Request Helper
 - Internal `Invoke-GraphRequest` issues GET/POST/PATCH/DELETE/PUT
@@ -174,10 +174,10 @@ Disconnect-Teams
 
 ## 📊 Operational Safeguards
 
-- ✅ BSTR-safe SecureString handling — `ZeroFreeBSTR` in `finally` blocks
-- 🔒 `script:TokenCache` cleared on disconnect — no residue in memory
+- ✅ BSTR-safe SecureString handling with `ZeroFreeBSTR` in `finally` blocks
+- 🔒 `script:TokenCache` cleared on disconnect, leaving no residue in memory
 - 🛟 Auto-pagination via `@odata.nextLink` for all list operations
-- 🛡 `ShouldProcess` on `New-TeamsChannel` — supports `-WhatIf` for safe testing
+- 🛡 `ShouldProcess` on `New-TeamsChannel`, with `-WhatIf` for safe testing
 - 📝 `-Verbose` flag on all functions for debug output
 - 🆘 Module auto-installs missing `Microsoft.Graph.*` modules from PSGallery
 
@@ -200,14 +200,14 @@ Disconnect-Teams
 
 ## 🛡 Design Principles
 
-- **No secrets in code** — example placeholder values shown; use `$env:TEAMS_CLIENT_SECRET` in production
-- **Pagination handled** — `@odata.nextLink` consumed automatically with `-All`
-- **Auto-dependency** — required Graph modules installed on first import
-- **State-checked** — `script:TokenCache` cleared on disconnect
-- **BSTR-safe** — SecureString conversion uses proper cleanup
-- **ShouldProcess-friendly** — `New-TeamsChannel` supports `-WhatIf`/`-Confirm`
-- **Membership-typed** — explicit `[ValidateSet]` on `MembershipType` prevents bad values
-- **Generic helper** — internal `Invoke-GraphRequest` covers GET/POST/PATCH/DELETE/PUT for ad-hoc needs
+- Example placeholder values are shown; there are no secrets in code, so use `$env:TEAMS_CLIENT_SECRET` in production
+- `@odata.nextLink` is consumed automatically with `-All`
+- Required Graph modules are installed on first import
+- `script:TokenCache` is cleared on disconnect
+- SecureString conversion uses proper cleanup
+- `New-TeamsChannel` supports `-WhatIf`/`-Confirm`
+- Explicit `[ValidateSet]` on `MembershipType` prevents bad values
+- Internal `Invoke-GraphRequest` covers GET/POST/PATCH/DELETE/PUT for ad-hoc needs
 
 ---
 

@@ -1,6 +1,6 @@
 # 📦 Connect-MgGraph Module (Connect-MgGraph.psm1)
 
-> Part of **[M365 Auth Modules](../README.md)** — centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
+> Part of **[M365 Auth Modules](../README.md)**: centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
 
 ![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-blue.svg)
 ![Graph](https://img.shields.io/badge/API-Microsoft%20Graph-0078D6.svg)
@@ -13,9 +13,9 @@
 
 **Connect-MgGraph.psm1** is a general-purpose Microsoft Graph connection module for **Users**, **Groups**, **Devices**, and **organization-wide directory operations**. It supports both **app-only** (client credentials) and **delegated** (interactive) authentication and provides helper functions for the most common Microsoft Graph queries with automatic pagination.
 
-- **Auth flow:** OAuth 2.0 client credentials (app-only) or interactive user login
-- **API endpoint:** `https://graph.microsoft.com/v1.0/`
-- **Best for:** User/Group/Device enumeration, OData-filtered queries, scheduled audit scripts
+- Auth flow: OAuth 2.0 client credentials (app-only) or interactive user login
+- API endpoint: `https://graph.microsoft.com/v1.0/`
+- Best for: User/Group/Device enumeration, OData-filtered queries, scheduled audit scripts
 
 > 📖 For App Registration setup see [`SETUP.md`](SETUP.md) section **6️⃣ Connect-MgGraph App Registration**.
 
@@ -164,9 +164,9 @@ Disconnect-MgGraphModule
 
 ## 📊 Operational Safeguards
 
-- ✅ BSTR-safe SecureString handling — `ZeroFreeBSTR` in `finally` blocks
+- ✅ BSTR-safe SecureString handling with `ZeroFreeBSTR` in `finally` blocks
 - 🔒 `script:Connected` state-checked before every Graph call
-- 🛟 Auto-pagination via `@odata.nextLink` — never silently drops results
+- 🛟 Auto-pagination via `@odata.nextLink` avoids silently dropping results
 - 🔄 Token re-acquired on each fresh `Connect-MgGraphModule` call
 - 📝 `-Verbose` flag on all functions for debug output
 - 🆘 Module auto-installs missing `Microsoft.Graph.*` modules from PSGallery
@@ -189,13 +189,13 @@ Disconnect-MgGraphModule
 
 ## 🛡 Design Principles
 
-- **No secrets in code** — example placeholder values shown; use `$env:GRAPH_CLIENT_SECRET` in production
-- **Pagination handled** — `@odata.nextLink` consumed automatically with `-All`
-- **Auto-dependency** — required Graph modules installed on first import
-- **State-checked** — `script:Connected` guard prevents calls before connection
-- **BSTR-safe** — SecureString conversion uses `ZeroFreeBSTR` in `finally`
-- **Filter-aware** — server-side OData reduces payload and rate-limit pressure
-- **Property selector** — defaults include identity + workload fields; override with `-Property`
+- Example placeholder values are shown; there are no secrets in code, so use `$env:GRAPH_CLIENT_SECRET` in production
+- `@odata.nextLink` is consumed automatically with `-All`
+- Required Graph modules are installed on first import
+- The `script:Connected` guard prevents calls before connection
+- SecureString conversion uses `ZeroFreeBSTR` in `finally`
+- Server-side OData reduces payload and rate-limit pressure
+- Defaults include identity and workload fields; override them with `-Property`
 
 ---
 

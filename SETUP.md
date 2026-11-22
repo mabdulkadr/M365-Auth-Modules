@@ -1,6 +1,6 @@
 # 🛠 M365 Auth Modules — Azure AD App Registration Guide
 
-> Part of **[M365 Auth Modules](README.md)** — centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
+> Part of **[M365 Auth Modules](README.md)**: centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
 
 ![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-blue.svg)
 ![Azure AD](https://img.shields.io/badge/Azure%20AD-App%20Registration-0078D6.svg)
@@ -13,7 +13,7 @@
 
 This guide walks you through creating **Azure AD App Registrations** for each module of **M365 Auth Modules**. Each module requires its own app registration (or a shared one with combined permissions) to authenticate via **OAuth 2.0** or **Certificate-based auth**.
 
-> ⚠️ **Important:** Microsoft is deprecating SMTP AUTH Basic Authentication. OAuth 2.0 via Microsoft Graph is the **future-proof** authentication method. See the [Microsoft announcement](https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/remote-domain-articles-auth-and-undeliverable-email-organization-settings#smtp-auth) for details.
+> ⚠️ **Important:** Microsoft is deprecating SMTP AUTH Basic Authentication. Use OAuth 2.0 via Microsoft Graph instead. See the [Microsoft announcement](https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/remote-domain-articles-auth-and-undeliverable-email-organization-settings#smtp-auth) for details.
 
 ---
 
@@ -129,7 +129,7 @@ Intune-PowerShell-Module
 4. Select expiration: **24 months** (recommended)
 5. Click **Add**
 6. **IMMEDIATELY** copy the **Value** (not the Secret ID)
-7. Save it securely — **it won't be shown again**
+7. Save it securely; **it won't be shown again**
 
 > ⚠️ The secret value is only shown once. Copy it immediately.
 

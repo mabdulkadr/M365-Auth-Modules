@@ -1,6 +1,6 @@
 # 📦 Send-ExchangeMail Module (Send-ExchangeMail.psm1)
 
-> Part of **[M365 Auth Modules](../README.md)** — centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
+> Part of **[M365 Auth Modules](../README.md)**: centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
 
 ![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-blue.svg)
 ![Graph](https://img.shields.io/badge/API-Microsoft%20Graph-0078D6.svg)
@@ -12,11 +12,11 @@
 
 ## 📖 Overview
 
-**Send-ExchangeMail.psm1** sends HTML email through Microsoft Graph API using **OAuth 2.0 client credentials** (app-only). It is designed for an Azure AD app registration with the `Mail.Send` application permission. **No SMTP**, **no Basic Auth**, **no legacy protocols**.
+Send-ExchangeMail.psm1 sends HTML email through the Graph API with app-only OAuth 2.0 client credentials. It expects an Azure AD app registration with the `Mail.Send` application permission. There is no SMTP client, Basic Auth, or legacy protocol involved.
 
-- **Auth flow:** OAuth 2.0 client credentials (app-only) only
-- **API endpoint:** `https://graph.microsoft.com/v1.0/users/{from}/sendMail`
-- **Best for:** Scheduled reports, alert emails, automated notifications from non-interactive scripts
+- Sign-in uses OAuth 2.0 client credentials only
+- Messages go to `https://graph.microsoft.com/v1.0/users/{from}/sendMail`
+- It suits scheduled reports, alerts, and notifications from scripts that cannot prompt a user
 
 > 📖 For App Registration setup see [`SETUP.md`](SETUP.md) section **2️⃣ Send-ExchangeMail App Registration**.
 
@@ -25,20 +25,20 @@
 ## ✨ Core Features
 
 ### 🔹 Send-ExchangeMail (Single Public Function)
-- **HTML body** (`<h1>`, tables, formatting) via `contentType = HTML`
-- **CC / BCC** recipient arrays
-- **File attachments** as Graph `fileAttachment` with Base64-encoded `contentBytes`
-- **Save to Sent Items** via `-SaveToSentItems` switch
-- **Send As** mailbox — the app must be granted "Send As" in Exchange Admin Center
+- HTML bodies with headings, tables, and formatting, sent with `contentType = HTML`
+- CC and BCC recipient lists
+- Local files attached as Graph `fileAttachment` objects with Base64 `contentBytes`
+- `-SaveToSentItems` keeps a copy in the sender's Sent Items
+- "Send As" must be granted to the app in Exchange Admin Center for the sender mailbox
 
 ### 🔹 OAuth 2.0 Token Acquisition
-- POST to `login.microsoftonline.com/{tenant}/oauth2/v2.0/token`
-- BSTR-safe SecureString handling — `ZeroFreeBSTR` in `finally` block
-- Surfaces AADSTS `error_description` from response body for troubleshooting
+- Requests a token from `login.microsoftonline.com/{tenant}/oauth2/v2.0/token`
+- Handles SecureString values safely with `ZeroFreeBSTR` in a `finally` block
+- Shows the AADSTS `error_description` from the response when a request fails
 
 ### 🔹 Multi-Source Secret Resolution
-- Priority: `-ClientSecret` parameter → `$env:EXCHANGE_CLIENT_SECRET` → `$script:DefaultClientSecret`
-- Plain-text fallback via `-ClientSecretDefault` parameter for legacy tooling
+- Checks `-ClientSecret`, then `$env:EXCHANGE_CLIENT_SECRET`, then `$script:DefaultClientSecret`
+- Has a plain-text fallback with `-ClientSecretDefault` for older tooling
 
 ---
 
@@ -145,10 +145,10 @@ Send-ExchangeMail -From "noreply@contoso.com" -To "user@contoso.com" `
 
 ## 📊 Operational Safeguards
 
-- ✅ BSTR-safe SecureString handling — `ZeroFreeBSTR` in `finally` blocks
+- ✅ BSTR-safe SecureString handling with `ZeroFreeBSTR` in `finally` blocks
 - 🔒 Plaintext secret `[System.Text.Encoding]::UTF8.GetBytes` only inside request scope
 - 🛟 Returns `$true` on success, descriptive `Write-Error` on failure
-- 🛡 `saveToSentItems` defaults to `$false` — explicit opt-in for compliance
+- 🛡 `saveToSentItems` defaults to `$false` as an explicit opt-in for compliance
 - 📝 `-Verbose` on acquisition + dispatch messages
 - 🆘 Surfaces AADSTS `error_description` from token API response
 
@@ -171,13 +171,13 @@ Send-ExchangeMail -From "noreply@contoso.com" -To "user@contoso.com" `
 
 ## 🛡 Design Principles
 
-- **No SMTP / No Basic Auth** — Graph API only; future-proof against SMTP AUTH deprecation
-- **HTML-first** — `contentType = HTML` on all sends
-- **BSTR-safe** — SecureString conversion uses `ZeroFreeBSTR` in `finally`
-- **Multi-source secret** — parameter → env var → plaintext fallback → module default
-- **Explicit Send-As** — uses `from` field to identify the sender mailbox
-- **No persistence** — no token caching; token lives only during the function call
-- **Attestation-friendly** — `saveToSentItems` toggles user-visible audit trail
+- Uses only the Graph API, with no SMTP or Basic Auth, so the SMTP AUTH deprecation does not affect it
+- All sends use `contentType = HTML`
+- SecureString conversion uses `ZeroFreeBSTR` in `finally`
+- Secret sources in order: parameter → env var → plaintext fallback → module default
+- Uses the `from` field to identify the sender mailbox
+- No token caching; the token lives only during the function call
+- `saveToSentItems` toggles the user-visible audit trail
 
 ---
 

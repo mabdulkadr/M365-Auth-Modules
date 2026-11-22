@@ -1,6 +1,6 @@
 # 📦 Connect-SharePoint Module (Connect-SharePoint.psm1)
 
-> Part of **[M365 Auth Modules](../README.md)** — centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
+> Part of **[M365 Auth Modules](../README.md)**: centralized OAuth 2.0 + Certificate-based Microsoft 365 authentication.
 
 ![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-blue.svg)
 ![Graph](https://img.shields.io/badge/API-Microsoft%20Graph-0078D6.svg)
@@ -14,9 +14,9 @@
 
 **Connect-SharePoint.psm1** is a SharePoint Online management module via Microsoft Graph API. It authenticates with SharePoint-specific permission scopes and provides helpers for **site resolution**, **list CRUD operations**, and **file upload/download** through the Microsoft Graph SDK.
 
-- **Auth flow:** OAuth 2.0 client credentials (app-only) or interactive user login
-- **API endpoint:** `https://graph.microsoft.com/v1.0/`
-- **Best for:** Site-scoped reporting, list automation, file transfer automation
+- Auth flow: OAuth 2.0 client credentials (app-only) or interactive user login
+- API endpoint: `https://graph.microsoft.com/v1.0/`
+- Best for: Site-scoped reporting, list automation, file transfer automation
 
 > 📖 For App Registration setup see [`SETUP.md`](SETUP.md) section **5️⃣ Connect-SharePoint App Registration**.
 
@@ -37,7 +37,7 @@
 ### 🔹 Get-SharePointList / Add-SharePointListItem
 - Read all items by list display name with OData `$filter` support
 - Auto-pagination via `-All`
-- `Add-SharePointListItem` uses `ShouldProcess` — supports `-WhatIf`
+- `Add-SharePointListItem` uses `ShouldProcess`, with `-WhatIf` support
 - OData filter injection prevented via `''` → `''''` escape on `displayName`
 
 ### 🔹 Get-SharePointFile / Upload-SharePointFile
@@ -179,11 +179,11 @@ Disconnect-SharePoint
 
 ## 📊 Operational Safeguards
 
-- ✅ OData injection prevented — `''` → `''''` escape on `displayName` filters
+- ✅ OData injection prevented with `''` → `''''` escaping on `displayName` filters
 - 🔒 `script:Connected` state-checked before every Graph call
-- 🛟 Auto-pagination via `@odata.nextLink` — never silently drops results
+- 🛟 Auto-pagination via `@odata.nextLink` avoids silently dropping results
 - 📝 `-Verbose` flag on all functions for debug output
-- 🛟 `ShouldProcess` on add/upload — supports `-WhatIf` for safe testing
+- 🛟 `ShouldProcess` on add/upload, with `-WhatIf` for safe testing
 - 🆘 Module auto-installs missing `Microsoft.Graph.*` modules from PSGallery
 
 ---
@@ -205,14 +205,14 @@ Disconnect-SharePoint
 
 ## 🛡 Design Principles
 
-- **No secrets in code** — example placeholder values shown; use `$env:SHAREPOINT_CLIENT_SECRET` in production
-- **Pagination handled** — `@odata.nextLink` consumed automatically with `-All`
-- **Auto-dependency** — required Graph modules installed on first import
-- **State-checked** — `script:Connected` guard prevents calls before connection
-- **BSTR-safe** — SecureString conversion uses `ZeroFreeBSTR` in `finally`
-- **ShouldProcess-friendly** — all write operations support `-WhatIf`/`-Confirm`
-- **OData-safe** — string interpolation escaped against filter injection
-- **Site caching** — `-SiteUrl` on connect avoids repeated resolutions
+- Example placeholder values are shown; there are no secrets in code, so use `$env:SHAREPOINT_CLIENT_SECRET` in production
+- `@odata.nextLink` is consumed automatically with `-All`
+- Required Graph modules are installed on first import
+- The `script:Connected` guard prevents calls before connection
+- SecureString conversion uses `ZeroFreeBSTR` in `finally`
+- All write operations support `-WhatIf`/`-Confirm`
+- String interpolation is escaped against filter injection
+- `-SiteUrl` on connect avoids repeated site resolutions
 
 ---
 
